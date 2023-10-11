@@ -4,23 +4,30 @@ import time
 from pico2d import *
 import math
 
+
 def space_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
 
 def a_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_a
 
+
 def time_out(e):
     return e[0] == 'TIME_OUT'
+
 
 def right_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_RIGHT
 
+
 def right_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_RIGHT
 
+
 def left_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_LEFT
+
 
 def left_up(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYUP and e[1].key == SDLK_LEFT
@@ -57,6 +64,7 @@ class Idle:
 
         pass
 
+
 class Sleep:
 
     @staticmethod
@@ -90,7 +98,7 @@ class Run:
             boy.dir, boy.action = 1, 1
         elif left_down(e) or right_up(e):
             boy.dir, boy.action = -1, 0
-        boy.auto_time = get_time()
+
 
     @staticmethod
     def exit(boy, e):
@@ -106,31 +114,41 @@ class Run:
     def draw(boy):
         boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
 
+
 class AutoRun:
     @staticmethod
     def enter(boy, e):
-        if right_down(e) or left_up(e):
-            boy.dir, boy.action = 1, 1
-        elif left_down(e) or right_up(e):
-            boy.dir, boy.action = -1, 0
+        if boy.action == 3:
+            boy.action = 1
+            boy.dir = 1
+        elif boy.action == 2:
+            boy.action = 0
+            boy.dir = -1
+        boy.auto_time = get_time()
+        print('auto mode')
 
     @staticmethod
     def exit(boy, e):
+        print('auto 종료')
         pass
 
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        if boy.action == 1:
-            boy.x += boy.dir * 5
-        elif boy.action == 0:
-            boy.x -= boy.dir * 5
+        boy.x += boy.dir * 5
+        if boy.x >= 800:
+            boy.action = 0
+            boy.dir = -1
+        if boy.x <= 0:
+            boy.action = 1
+            boy.dir = 1
         if get_time() - boy.auto_time > 4:
             boy.state_machine.handle_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(boy):
         boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
+
 
 class StateMachine:
     def __init__(self, boy):

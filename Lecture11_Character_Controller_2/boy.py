@@ -138,7 +138,7 @@ class AutoRun:
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
         boy.count += 1
-        boy.x += boy.dir * (5 + boy.count)
+        boy.x += boy.dir * (5 + boy.count/2)
         if boy.x >= 800:
             boy.action = 0
             boy.dir = -1
@@ -156,7 +156,7 @@ class AutoRun:
         # boy.image.clip_draw(boy.frame * 100, boy.action * 100, 100, 100, boy.x, boy.y)
 
         boy.image.clip_composite_draw(boy.frame * 100, boy.action * 100, 100, 100,
-                                      0, '', boy.x, boy.y+boy.count/2, 100+boy.count, 100+boy.count)
+                                      0, '', boy.x, boy.y+boy.count/2-boy.count/10, 100+boy.count, 100+boy.count)
 
 
 class StateMachine:

@@ -107,7 +107,12 @@ class Run:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        boy.x += boy.dir * 5
+        if boy.x < 770 and boy.x > 30:
+            boy.x += boy.dir * 5
+        if boy.x >= 770:
+            boy.x = 770 - 1
+        elif boy.x <= 30:
+            boy.x = 30 + 1
         time.sleep(num)
         pass
 
